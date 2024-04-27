@@ -1,0 +1,141 @@
+*{
+    letter-spacing: 2px;
+}
+
+
+
+
+body{
+    
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: skyblue;
+    overscroll-behavior: none;
+}
+
+.container {    
+    padding-top: 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.section-creator {
+    height: 100vh;
+    background-color: red;
+}
+
+#content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center; 
+    flex-direction: column;
+    
+}
+
+#instructions {
+    margin-bottom: 80px;
+}
+
+button{
+    cursor: pointer;
+    border: none;
+    padding: 2px 10px 2px 10px;
+    height: 22px;
+    border-radius: 5px;
+    background-color: navy;
+    color: white;
+}
+
+button:hover{
+    background-color: mediumblue;
+}
+
+button:disabled,
+button:disabled:hover {
+    background-color: gray;
+    cursor: default;
+}
+
+/*FIREBASE STYLING*/
+
+.contentFirebase {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.inputFile {
+    display: none;
+}
+
+label {
+    height: 100px;
+    width: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    margin-bottom: 10px;
+    font-size: 100px;
+    background: linear-gradient(45deg, #00bfff, #ff4c68, #ef8172);
+    cursor: pointer;
+}
+
+.btn-firebase {
+    height: 100%;
+    padding: 20px 25px;
+    background-color: cornflowerblue;
+    color: white;
+    border: none;
+    margin-bottom: 10px;
+    cursor: pointer;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.bar {
+    height: 50px;
+    width: 500px;
+    background: #80808073;
+    margin-bottom: 10px;
+}
+.progress {
+    background: linear-gradient(12deg, #00bfff, #ff4c68, #ef8172);
+    height: 100%;
+    width: 0%;
+}
+.uploadPercentage {
+    font-size: 25px;
+
+}
+
+
+
+.img {
+    height: 150px;
+    width: 150px;
+    object-fit: contain;
+    visibility: hidden;
+}
+
+.done {
+    font-size: 2rem;
+}
+
+
+.doneMessage {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+/*MEDIA TAGS*/
+
+@media screen and (max-width: 530px) {
+    .bar {
+      width: 450px;
+    }
+  }

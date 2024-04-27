@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=0.9,user-scalable=no">
+    <link rel="stylesheet" href="style/style.css">
+    <link rel="stylesheet" href="./style/style3.css">
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-storage.js"></script>
+    <title>Data Creator</title>
+</head>
+<body>
+    <div class="container">
+    <div id="content">
+        <h1>Data Creator</h1>
+        <div>
+            <input id="student" type="text" placeholder="type your name"/>
+            <span id="instructions"></span>
+            <button id="advanceBtn" onclick="start();">START</button>
+        </div>
+        <br>      
+        <div id="sketchPadContainer"
+            style="display: none;"></div>
+            
+            <button class="btn-firebase" id="uploadD" onclick="uploadDisplay()">UPLOAD IMAGE</button>
+        </div>
+
+<!--START FIRE BASE-->
+<div class="contentFirebase" style="display: none;">
+    <input
+    type="file"
+    class="inputFile"
+    id="fileInp"
+    onchange="getFile(event)"
+    />
+    <label for="fileInp">+</label>
+    <span class="fileText"></span>
+    <button class="btn-firebase"  onclick="uploadImage()">UPLOAD IMAGE</button>
+    <div class="bar">
+        <div class="progress"></div>
+    </div>
+    <div class="uploadPercentage">0%</div>
+</div>
+<div class="doneMessage" style="display: none;">
+    <p class="done"></p>
+    <img src="./assets/1234.png" alt="" class="img" />
+</div>
+<!--END FIREBASE-->
+</div>
+    <script src="js/draw.js"></script>
+    <script src="js/sketchPad.js"></script>
+    <script>
+
+const firebaseConfig = {
+    apiKey: "AIzaSyCHtHNsoloXU0Ho_RjYxYUwLqqJ5y9adH4",
+    authDomain: "drawing-7348e.firebaseapp.com",
+    projectId: "drawing-7348e",
+    storageBucket: "drawing-7348e.appspot.com",
+    messagingSenderId: "468100279189",
+    appId: "1:468100279189:web:5b887f9f204b3a0a89e49c"
+  };
+      const app = firebase.initializeApp(firebaseConfig);
+
+      const storage = firebase.storage();
+
+// START FIREBASE
+
+
+  var fileText = document.querySelector(".fileText");
+  var uploadPercentage = document.querySelector(".uploadPercentage");
+  var progress = document.querySelector(".progress");
+  var done = document.querySelector(".done")
+  var imgDone = document.querySelector(".img");
+  var contentFirebase = document.querySelector(".contentFirebase");
+  var doneMessage = document.querySelector(".doneMessage");
+  var uploadD = document.querySelector("#uploadD");
+  var percentVal;
+  var fileItem;
+  var fileName;
+
+  function getFile(e){
+    fileItem = e.target.files[0];
+    fileName = fileItem.name;
+    fileText.innerHTML = fileName;
+  }
+
+  function uploadDisplay(){
+    contentFirebase.style.display="flex";
+  }
+
+  function uploadImage(){
+
+
+    let storageRef = firebase.storage().ref("json/"+fileName);
+    let uploadTask = storageRef.put(fileItem);
+
+    uploadTask.on("state_changed",(snapshot)=>{
+        console.log(snapshot);
+        percentVal = Math.floor((snapshot.bytesTransferred/snapshot.totalBytes)*100);
+        console.log(percentVal);
+        uploadPercentage.innerHTML = percentVal+"%";
+        progress.style.width=percentVal+"%";
+    },(error)=>{
+        console.log("Error is", error);
+    },()=>{
+
+        uploadTask.snapshot.ref.getDownloadURL().then((url)=>{
+            console.log("URL", url);
+
+            if(url !=""){
+                done.innerHTML = "Thank you File is uploaded Successfully";
+                doneMessage.style.display="flex";
+                imgDone.style.visibility="visible";
+                contentFirebase.style.display="none";
+                instructions.style.display="none";
+            }
+
+        })
+
+    })
+  }
+
+
+
+//SKETCHPAD
+
+        let index = 0;
+        const labels=["car","fish","house","tree","bicycle","guitar","pencil","clock","candle","pakistani flag"];
+        
+
+        const data={
+            student:null,
+            session:new Date().getTime(),
+            drawings:{}
+        };
+
+        function start(){
+            if(student.value==""){
+                alert("Please type your name first!");
+                return;
+            }
+            data.student=student.value;
+            student.style.display="none";
+            uploadD.style.display="none";
+            contentFirebase.style.display="none";
+            sketchPadContainer.style.display="block";
+            const label=labels[index];
+            instructions.innerHTML="Please draw a "+label;
+            advanceBtn.innerHTML="NEXT";
+            advanceBtn.onclick=next;
+        }
+        function next(){
+            if(sketchPad.paths.length==0){
+                alert("Draw something first!");
+                return;
+            }
+            
+            const label=labels[index];
+            data.drawings[label]=sketchPad.paths;
+            console.log(data);
+            sketchPad.reset();
+            index++;
+            if(index<labels.length){
+                const nextLabel=labels[index];
+            instructions.innerHTML="Please draw a "+nextLabel;
+            }else{
+                sketchPadContainer.style.display="none";
+                instructions.innerHTML="Thank You";
+                advanceBtn.innerHTML="SAVE";
+                advanceBtn.onclick=save;
+            }
+            
+        }
+
+        function save(){
+            advanceBtn.style.display="none";
+            instructions.innerHTML="Thank you for your Contribution! Take your download file and upload it to here";
+            contentFirebase.style.display="flex";
+   
+            const element=document.createElement('a');
+            element.setAttribute('href',
+            'data:text/plain;charset=utf-8,'+
+            encodeURIComponent(JSON.stringify(data)));
+            console.log(element);
+
+            const fileName=data.session+".json";
+            element.setAttribute('download', fileName);
+
+            element.style.display='none';
+            document.body.appendChild(element);
+            element.click();
+            document.body.removeChild(element);
+        }
+
+        const sketchPad = 
+            new SketchPad(sketchPadContainer);
+    </script>
+</body>
+</html>

@@ -53,7 +53,8 @@
 }
 
 .img-test {
-    height: 100px;
+    height: 25%;
+    width: 40%;
     border-radius: 50%;
 }
 

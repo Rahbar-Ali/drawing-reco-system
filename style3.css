@@ -71,3 +71,7 @@
     background-color: red !important;
     font-size: 25 !important;
 }
+
+.lead {
+    font-size: 2.5rem;
+}

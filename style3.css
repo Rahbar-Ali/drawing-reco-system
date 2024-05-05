@@ -30,7 +30,7 @@
 }
 
 .drawings-test {
-    padding-top: 50px !important;
+   
 }
 
 .offcanvas2 {
@@ -73,5 +73,9 @@
 }
 
 .lead {
+    font-size: 2.5rem;
+}
+
+.lead2 {
     font-size: 2.5rem;
 }
